@@ -12,3 +12,8 @@ how to use it.
 
 Currently it only generates 10 character ids, though future updates will likely
 make that configurable.
+
+## License
+
+sanic is ISC licensed.
+Check out the [LICENSE](https://github.com/ifo/sanic/blob/master/LICENSE) file.
