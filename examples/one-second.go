@@ -26,11 +26,11 @@ func main() {
 	}
 
 	fmt.Println("=== first ===")
-	first, _ := sanic.IntToString(ids[0], w.TotalBits)
+	first := w.IDString(ids[0])
 	fmt.Println(first)
 
 	fmt.Println("=== last ===")
-	last, _ := sanic.IntToString(ids[len(ids)-1], w.TotalBits)
+	last := w.IDString(ids[len(ids)-1])
 	fmt.Println(last)
 }
 

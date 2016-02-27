@@ -65,6 +65,11 @@ func (w *Worker) NextID() int64 {
 		w.Sequence
 }
 
+func (w *Worker) IDString(id int64) string {
+	str, _ := IntToString(id, w.TotalBits)
+	return str
+}
+
 func (w *Worker) WaitForNextMilli() {
 	ts := TimeMillis()
 	for ts <= w.LastTimeStamp {
