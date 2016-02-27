@@ -15,25 +15,29 @@ func IntToBytes(i int64) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func IntToString(i int64) (string, error) {
+func IntToString(i int64, totalBits uint64) (string, error) {
 	bts, err := IntToBytes(i)
 	if err != nil {
 		return "", err
 	}
-	bts = removeTrailingZeroBytes(bts)
-	return base64.RawURLEncoding.EncodeToString(bts), nil
+	bts = RemoveUnusedBytes(bts, totalBits)
+	str := RemoveSixTrailingZeroBits(base64.RawURLEncoding.EncodeToString(bts),
+		totalBits)
+	return str, nil
 }
 
-func RawIntToString(i int64) (string, error) {
-	bts, err := IntToBytes(i)
-	return base64.RawURLEncoding.EncodeToString(bts), err
-}
-
-func removeTrailingZeroBytes(bts []byte) []byte {
-	for i := len(bts) - 1; i > 0; i-- {
-		if bts[i] != 0 {
-			return bts[:i+1]
-		}
+func RemoveUnusedBytes(bts []byte, totalBits uint64) []byte {
+	bytesLen := totalBits / 8
+	if totalBits%8 != 0 {
+		bytesLen++
 	}
-	return bts
+	return bts[:bytesLen]
+}
+
+func RemoveSixTrailingZeroBits(s string, totalBits uint64) string {
+	strLen := int(totalBits / 6)
+	if len(s) == strLen+1 {
+		return s[:strLen]
+	}
+	return s
 }

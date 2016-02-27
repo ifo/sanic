@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	w := sanic.NewWorker(0, 0, 1288834974657, 5, 5, 12, 41, nil)
+	w := sanic.NewWorker(0, 1288834974657, 4, 14, 41)
 
 	start := time.Now()
 
@@ -26,11 +26,11 @@ func main() {
 	}
 
 	fmt.Println("=== first ===")
-	first, _ := sanic.IntToString(ids[0])
+	first, _ := sanic.IntToString(ids[0], w.TotalBits)
 	fmt.Println(first)
 
 	fmt.Println("=== last ===")
-	last, _ := sanic.IntToString(ids[len(ids)-1])
+	last, _ := sanic.IntToString(ids[len(ids)-1], w.TotalBits)
 	fmt.Println(last)
 }
 
