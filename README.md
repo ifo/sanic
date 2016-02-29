@@ -35,6 +35,21 @@ func main() {
 Check out [the examples](https://github.com/ifo/sanic/tree/master/examples) for
 more.
 
+### Future Improvements
+
+Many things are missing from sanic, so here's a TODO list of some of those
+things:
+
+- **Tests**: sanic has no tests.
+This is probably the next thing I should do.
+- **Concurrency Safety**: Currently the user must think about this.
+If multiple goroutines access sanic at the same time, bad things happen.
+:( By the by, the standard http library uses goroutines, so if you drop
+`worker.NextID()` into an HttpHandler method, you're going to have a bad day. ):
+- **More Random Looking IDs**: Generated IDs don't change that much.
+Some creative bit manipulation could likely change this while still ensuring
+that IDs are unique (so long as you use the same bit manipulation each time).
+
 ## License
 
 sanic is ISC licensed.
