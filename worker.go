@@ -44,6 +44,21 @@ func NewWorker(
 	return w
 }
 
+// Pre-generated workers are usable examples set as the 0'th worker of their
+// type, with a custom epoch of "2016-01-01 00:00:00 +0000 UTC"
+
+// TenLengthWorker will generate up to 8192000 unique ids/second for 69 years
+var TenLengthWorker = NewWorker(0, 1451606400000, 5, 13, 41, time.Millisecond)
+
+// NineLengthWorker will generate up to 819200 unique ids/second for 87 years
+var NineLengthWorker = NewWorker(0, 145160640000, 2, 13, 38, time.Millisecond*10)
+
+// EightLengthWorker will generate up to 40960 unique ids/second for 54 years
+var EightLengthWorker = NewWorker(0, 14516064000, 1, 12, 34, time.Millisecond*100)
+
+// SevenLengthWorker will generate up to 1024 unique ids/second for 68 years
+var SevenLengthWorker = NewWorker(0, 1451606400, 0, 10, 31, time.Second)
+
 func (w *Worker) NextID() int64 {
 	timestamp := w.Time()
 

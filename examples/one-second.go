@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	w := sanic.NewWorker(0, 1288834974657, 4, 14, 41, time.Millisecond)
+	w := sanic.TenLengthWorker
 
 	start := time.Now()
 
