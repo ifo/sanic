@@ -7,11 +7,33 @@ sanic is a clone of
 More specifically, the [IdWorker section of snowflake]
 (https://github.com/twitter/snowflake/blob/snowflake-2010/src/main/scala/com/twitter/service/snowflake/IdWorker.scala).
 
-Check out [the examples](https://github.com/ifo/sanic/tree/master/examples) for
-how to use it.
+### Usage
 
-Currently it only generates 10 character ids, though future updates will likely
-make that configurable.
+To use sanic, either make a new worker, or select a premade one:
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/ifo/sanic"
+)
+
+func main() {
+	worker := sanic.SevenLengthWorker
+	// equivalent to:
+	// worker := sanic.NewWorker(0, 1451606400, 0, 10, 31, time.Second)
+
+	id := worker.NextID()
+	idString := worker.IDString(id)
+	fmt.Println(id)       // e.g. 5292179457
+	fmt.Println(idString) // e.g. "AUBwOwE"
+}
+```
+
+Check out [the examples](https://github.com/ifo/sanic/tree/master/examples) for
+more.
 
 ## License
 
