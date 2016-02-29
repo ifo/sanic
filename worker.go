@@ -82,5 +82,14 @@ func (w *Worker) WaitForNextTime() {
 }
 
 func (w *Worker) Time() int64 {
-	return time.Now().UnixNano() / int64(w.Frequency)
+	switch w.Frequency {
+	case time.Second:
+		return time.Now().UnixNano() / int64(time.Second)
+	case time.Millisecond * 100:
+		return time.Now().UnixNano() / int64(time.Millisecond*100)
+	case time.Millisecond:
+		return time.Now().UnixNano() / int64(time.Millisecond)
+	default:
+		return time.Now().UnixNano() / int64(time.Millisecond)
+	}
 }
