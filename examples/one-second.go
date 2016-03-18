@@ -8,12 +8,10 @@ import (
 )
 
 func main() {
-	w := sanic.TenLengthWorker
-
-	start := time.Now()
+	w := sanic.NewWorker10(0)
 
 	ids := []int64{}
-	for time.Since(start).Seconds() < 1 {
+	for start := time.Now(); time.Since(start).Seconds() < 1; {
 		ids = append(ids, w.NextID())
 	}
 
