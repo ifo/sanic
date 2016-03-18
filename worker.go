@@ -2,6 +2,7 @@ package sanic
 
 import (
 	"log"
+	"sync"
 	"time"
 )
 
@@ -17,6 +18,7 @@ type Worker struct {
 	Frequency      time.Duration
 	TotalBits      uint64
 	CustomEpoch    int64
+	mutex          sync.Mutex
 }
 
 func NewWorker(
@@ -60,16 +62,25 @@ var EightLengthWorker = NewWorker(0, 14516064000, 1, 12, 34, time.Millisecond*10
 var SevenLengthWorker = NewWorker(0, 1451606400, 0, 10, 31, time.Second)
 
 func (w *Worker) NextID() int64 {
+	w.mutex.Lock()
+	defer w.mutex.Unlock()
+
+	return w.UnsafeNextID()
+}
+
+// UnsafeNextID is faster than NextID, but must be called within
+// only one goroutine, otherwise ID uniqueness is not guaranteed.
+func (w *Worker) UnsafeNextID() int64 {
 	timestamp := w.Time()
 
 	if w.LastTimeStamp > timestamp {
-		w.WaitForNextTime()
+		w.waitForNextTime()
 	}
 
 	if w.LastTimeStamp == timestamp {
 		w.Sequence = (w.Sequence + 1) % (1 << w.SequenceBits)
 		if w.Sequence == 0 {
-			w.WaitForNextTime()
+			w.waitForNextTime()
 			timestamp = w.LastTimeStamp
 		}
 	} else {
@@ -88,7 +99,7 @@ func (w *Worker) IDString(id int64) string {
 	return str
 }
 
-func (w *Worker) WaitForNextTime() {
+func (w *Worker) waitForNextTime() {
 	ts := w.Time()
 	for ts <= w.LastTimeStamp {
 		ts = w.Time()
