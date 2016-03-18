@@ -23,14 +23,14 @@ type Worker struct {
 
 func NewWorker(
 	id, epoch int64, idBits, sequenceBits, timestampBits uint64,
-	frequency time.Duration) Worker {
+	frequency time.Duration) *Worker {
 
 	totalBits := idBits + sequenceBits + timestampBits + 1
 	if totalBits%6 != 0 {
 		log.Fatal("totalBits + 1 must be evenly divisible by 6")
 	}
 
-	w := Worker{
+	w := &Worker{
 		ID:             id,
 		IDBits:         idBits,
 		IDShift:        sequenceBits,
@@ -46,20 +46,38 @@ func NewWorker(
 	return w
 }
 
-// Pre-generated workers are usable examples set as the 0'th worker of their
-// type, with a custom epoch of "2016-01-01 00:00:00 +0000 UTC"
+// Easy Worker generation given an ID and using a default configuration
+// with a custom epoch of "2016-01-01 00:00:00 +0000 UTC"
 
-// TenLengthWorker will generate up to 8192000 unique ids/second for 69 years
-var TenLengthWorker = NewWorker(0, 1451606400000, 5, 13, 41, time.Millisecond)
+// NewWorker10 will generate up to 4096000 unique ids/second for 69 years
+// NewWorker10 will return nil if the ID is greater than 63 or less than 0
+func NewWorker10(id int64) *Worker {
+	if id > 63 || id < 0 { // 2<<6, 6 bits of ID space
+		return nil
+	}
+	return NewWorker(id, 1451606400000, 6, 12, 41, time.Millisecond)
+}
 
-// NineLengthWorker will generate up to 819200 unique ids/second for 87 years
-var NineLengthWorker = NewWorker(0, 145160640000, 2, 13, 38, time.Millisecond*10)
+// NewWorker9 will generate up to 819200 unique ids/second for 87 years
+// NewWorker9 will return nil if the ID is greater than 3 or less than 0
+func NewWorker9(id int64) *Worker {
+	if id > 3 || id < 0 { // 2<<2, 2 bits of ID space
+		return nil
+	}
+	return NewWorker(id, 145160640000, 2, 13, 38, time.Millisecond*10)
+}
 
-// EightLengthWorker will generate up to 40960 unique ids/second for 54 years
-var EightLengthWorker = NewWorker(0, 14516064000, 1, 12, 34, time.Millisecond*100)
+// NewWorker8 will generate up to 81920 unique ids/second for 54 years
+// NewWorker8 is the only worker of it's size with this configuration
+func NewWorker8() *Worker {
+	return NewWorker(0, 14516064000, 0, 13, 34, time.Millisecond*100)
+}
 
-// SevenLengthWorker will generate up to 1024 unique ids/second for 68 years
-var SevenLengthWorker = NewWorker(0, 1451606400, 0, 10, 31, time.Second)
+// NewWorker7 will generate up to 1024 unique ids/second for 68 years
+// NewWorker7 is the only worker of its size with this configuration
+func NewWorker7() *Worker {
+	return NewWorker(0, 1451606400, 0, 10, 31, time.Second)
+}
 
 func (w *Worker) NextID() int64 {
 	w.mutex.Lock()
