@@ -42,7 +42,8 @@ func NewWorker(
 		TotalBits:      totalBits,
 		CustomEpoch:    epoch,
 	}
-	w.LastTimeStamp = w.Time()
+	// guarantee that the first NextID will start at sequence 0
+	w.LastTimeStamp = w.Time() - int64(2*time.Second)
 	return w
 }
 
