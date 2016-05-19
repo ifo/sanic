@@ -21,7 +21,7 @@ import (
 )
 
 func main() {
-	worker := sanic.SevenLengthWorker
+	worker := sanic.NewWorker7()
 	// equivalent to:
 	// worker := sanic.NewWorker(0, 1451606400, 0, 10, 31, time.Second)
 
